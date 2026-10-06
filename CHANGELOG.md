@@ -28,7 +28,7 @@ Versioning is `0.x.y` until a 1.0.0 release decision is made.
 First public-tree snapshot of the working product:
 
 - Offline-first desktop extraction (Tesseract, PDFBox, local Ollama `qwen2.5:3b`).
-- Cloud failover proxy (Gemini → DeepSeek → GitHub Models) with device quota.
+- Backend failover proxy sources (Gemini / DeepSeek / GitHub Models) — development/future infrastructure, not used by the offline desktop product.
 - Bilingual FA/EN Claymorphic UI; Jalali/Gregorian support; Persian-Indic digits.
 - Validation suite (Iranian checksums, duplicates, line arithmetic).
 - Archive, backup/restore, hot-folder watcher, batch processing.

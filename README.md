@@ -8,7 +8,7 @@ AI-powered invoice extraction and financial document processing for desktop.
 ![Languages](https://img.shields.io/badge/Languages-Persian_%7C_English-009485)
 ![Tests](https://img.shields.io/badge/Tests-350_passing-2E7D32)
 
-InvoiceExtract reads Persian and international invoices from scans, photos and PDFs, validates them, archives them locally, and turns the archive into ledgers, statements and analytics — with an offline-first local AI engine and an optional cloud fallback.
+InvoiceExtract reads Persian and international invoices from scans, photos and PDFs, validates them, archives them locally, and turns the archive into ledgers, statements and analytics — with a fully offline local AI engine.
 
 - **Offline-first desktop app** (Windows 64-bit): OCR + local LLM extraction, no account, no subscription.
 - **Bilingual FA/EN workspace** with one-tap switching, Persian-Indic digits and RTL/LTR mirroring.
@@ -26,7 +26,6 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
         │  OCR (Tesseract · PDFBox text layer)
         ▼
  Local AI structuring (Ollama · qwen2.5:3b — on your machine)
-        │  ↳ Cloud failover (Gemini → DeepSeek → GitHub Models) only if local is down
         ▼
  Validate → Review → Archive → Ledger · Statements · Analytics · Exports
 ```
@@ -43,7 +42,7 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
 
 ### AI Extraction
 - Local-first via Ollama (`qwen2.5:3b`, auto-provisioned on Windows: installer → service → model pull, all in-app).
-- Strict JSON envelope with lenient decoding; cloud failover chain (Gemini → DeepSeek → GitHub Models) through a Cloudflare Worker proxy with per-device daily quota.
+- Strict JSON envelope with lenient decoding; everything runs against `localhost` — no cloud calls in the product flow.
 
 ### Validation
 - Iranian national ID / legal-entity Modulo-11 checksums, US EIN prefix checks, EU/UK VAT shape checks — each with live editor chips.
@@ -68,12 +67,22 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
 ### Localization
 - Full Persian/English UI with RTL/LTR mirroring, Jalali/Gregorian dates, Persian-Indic digits in FA mode, Western formatting in EN mode.
 
-## Privacy / Offline-First
+## Privacy / Offline
 
-- The desktop app is **offline-first**: extraction runs against the Ollama daemon on your own machine; invoices persist as local JSON under `%APPDATA%/InvoiceExtract`.
-- In local mode, document content is **never sent to any cloud** — this follows from the architecture: the pipeline calls `localhost` (Ollama) and the cloud proxy is only invoked on the explicit failover path when local is unavailable.
-- No account, no telemetry, no tracking in the client. On the explicit cloud-failover path, OCR text is forwarded to the AI provider — that path inherently shares document text with the provider.
-- End users need **no API key**: cloud failover authenticates worker-to-provider with server-side secrets. Operators deploying their own worker need provider keys (see [Configuration](#configuration)).
+InvoiceExtract Desktop is fully offline. Invoice documents and extracted data
+remain on your computer: extraction runs against the Ollama daemon on your own
+machine (`localhost`), and invoices persist as local JSON under
+`%APPDATA%/InvoiceExtract`.
+
+- AI processing is performed locally using Ollama/local AI models. Internet
+  access is NOT required for normal application operation (only the one-time
+  setup downloads — the Ollama installer and AI model — need a connection).
+- No Gemini API key is required. No Cloudflare account is required. No cloud
+  AI subscription is required.
+- No account, no telemetry, no tracking in the client.
+- The repository also contains backend/worker sources for development and
+  future experiments; they are not required by, and never contacted by, the
+  released desktop product.
 
 ## Architecture
 
@@ -87,17 +96,16 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
                               │
               ┌───────────────┼───────────────┐
               ↓               ↓               ↓
-       Data layer      Presentation      Cloud proxy
- OCR · AI · stores ViewModel · UI   (Cloudflare Worker)
-   │   (Ollama /        │           Failover chain:
-   │    local AI)       │           Gemini → DeepSeek
-   │                    │               → GitHub Models
+       Data layer      Presentation     Local AI
+ OCR · AI · stores ViewModel · UI   (Ollama daemon,
+   │                            `localhost:11434`)
    └─ File-backed JSON stores ──────────
 ```
 
-> **Scope note:** the repository also contains an `:app` Android module, but it
-> is an experimental/future target — **the current public product is
-> InvoiceExtract Desktop for Windows 10/11 64-bit only**.
+> **No cloud in the product flow.** The repository also contains `backend/`
+> (Cloudflare Worker sources): development/future infrastructure, never
+> contacted by the released desktop product. The same applies to the `:app`
+> Android module — an experimental/future target, not a released product.
 
 Details: [docs/architecture.md](docs/architecture.md).
 
@@ -121,13 +129,14 @@ Installers land under `desktop/build/compose/binaries/main/` (`.exe`/`.msi` on W
 
 ## Configuration
 
-No secrets are needed to build or run. All credentials stay out of source:
+No secrets are needed to install or run the desktop app. The entries below
+exist for contributors and backend operators only:
 
 | File | Purpose | Committed? |
 |---|---|---|
 | `local.properties` | Android SDK path (contributor Android builds only) + dev proxy URL/client key (`INVOICE_*`) | **Never** (git-ignored) |
-| `backend/.dev.vars` | Local worker secrets (copy from `.dev.vars.example`) | **Never** (git-ignored) |
-| Cloudflare Secrets | Production worker credentials (`wrangler secret put <NAME>`) | N/A (server-side) |
+| `backend/.dev.vars` | Local worker secrets for backend development (copy from `.dev.vars.example`) | **Never** (git-ignored) |
+| Cloudflare Secrets | Production worker credentials (`wrangler secret put <NAME>`) — backend operators only | N/A (server-side) |
 
 ```bash
 # backend only — production secrets, never in files:

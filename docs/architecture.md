@@ -10,7 +10,7 @@
 | `:domain` | Pure Kotlin/JVM | `model` (Invoice, InvoiceItem, CurrencyType, PaymentStatus), `validation` (InvoiceValidator, national-ID checksums), `extractor` interfaces, `repository` contracts, `export` (CSV emitter). Zero Android/desktop dependencies. |
 | `:desktop` | Compose Multiplatform (JVM) | The desktop app: OCR, AI, stores, use-cases, ViewModel, full UI. Depends on `:domain`. |
 | `:app` | Android (AGP 8.7.2), experimental | In-tree future target sharing `:domain`: Jetpack Compose UI, Room persistence, ML Kit OCR, DataStore session. **Not part of the current public release**, which is the Windows desktop app only. |
-| `backend/` | TypeScript + Wrangler | `invoice-extract-proxy`: Cloudflare Worker failover reverse proxy (Gemini → DeepSeek → GitHub Models). Not part of the Gradle build. |
+| `backend/` | TypeScript + Wrangler | Development/future infrastructure — not required by the current offline desktop product. Not part of the Gradle build. |
 
 ## Desktop layering (`com.invoiceextract.desktop`)
 
@@ -56,9 +56,8 @@ Key contracts:
    Tesseract (`fas.traineddata` auto-fetched once, best-effort); Persian
    normalization unifies digits/ Yeh-Kaf and strips zero-widths.
 3. **Structure**: Ollama daemon (`qwen2.5:3b`, auto-provisioned on Windows)
-   returns a strict JSON envelope, decoded leniently; on local failure the
-   Cloudflare proxy tries Gemini → DeepSeek → GitHub Models with a per-device
-   daily quota (10/day, 3 without device ID).
+   returns a strict JSON envelope, decoded leniently. All calls stay on
+   `localhost` — no cloud provider participates in the product flow.
 4. **Validate & audit**: arithmetic cross-checks, duplicate fingerprinting,
    Iranian/EIN/VAT checksum verdicts with live editor chips.
 5. **Archive**: atomic JSON store (`invoices.json` + fsync + atomic rename),
@@ -76,7 +75,10 @@ pieces (Room database, DataStore session, ML Kit Latin OCR). Cloud extraction
 goes through the worker proxy with the `X-App-Client-Key` header
 (BuildConfig-injected from `local.properties`, never committed).
 
-## Backend worker (`backend/src/index.ts`)
+## Backend worker (`backend/src/index.ts`) — development/future infrastructure
+
+> Not required by the current offline desktop product, which never contacts
+> it. Documented here because it exists in the tree.
 
 Single `POST /api/v1/extract` route: verifies the client key (timing-safe),
 then fans out across providers with per-device quota. All credentials arrive

@@ -7,7 +7,7 @@
 ## Completed
 
 - Offline-first desktop extraction (Tesseract + PDFBox + local Ollama `qwen2.5:3b` with Windows auto-provisioning).
-- Cloud failover proxy (Gemini → DeepSeek → GitHub Models) with per-device quota.
+- Backend failover proxy sources (Gemini / DeepSeek / GitHub Models) — development/future infrastructure, not used by the offline desktop product.
 - Bilingual FA/EN workspace with RTL/LTR mirroring and Jalali/Gregorian support.
 - Validation suite: Iranian checksums, US EIN, EU/UK VAT, duplicates, line arithmetic.
 - Archive with atomic JSON store, backup/restore, hot-folder watcher.

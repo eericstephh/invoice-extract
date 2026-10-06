@@ -29,8 +29,9 @@ This repository must never contain credentials:
 
 - No API keys, tokens, passwords, certificates or private keys in any file.
 - `local.properties`, `.dev.vars`, `.env` and `backend/.wrangler/` are
-  git-ignored for exactly this reason — if you need a value, it belongs in
-  Cloudflare Secrets (production) or `.dev.vars` (local), never in a commit.
+  git-ignored for exactly this reason — backend-operator and contributor
+  credentials belong in Cloudflare Secrets (production) or `.dev.vars`
+  (local), never in a commit. Desktop end users need none of these.
 - The worker fails closed without keys (401/503), so a misconfigured deploy
   cannot leak or burn provider quota.
 
@@ -47,6 +48,8 @@ This repository must never contain credentials:
 
 - Client Release builds are debug-signed local artifacts; production uploads
   require a proper upload key (see `app/build.gradle.kts`).
-- The desktop cloud-failover path sends OCR text to the AI provider by design;
-  the desktop local path never leaves the machine. Threat reports should state
-  which path they concern.
+- Invoice documents and extracted data stay on the user's machine: the desktop
+  product performs AI processing locally (Ollama on `localhost`) and requires
+  no cloud account, no provider key and no Cloudflare account. Threat reports
+  should state which path they concern; backend/worker secrets below apply to
+  backend operators only, never to desktop end users.
