@@ -175,4 +175,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) — setup, branching, style, tests, PRs.
 
 ## License
 
-**TODO:** no license has been chosen yet — see the license comparison in the release notes. Until a `LICENSE` file lands, all rights are reserved by default.
+Licensed under the MIT License — see [LICENSE](LICENSE) for the full text.
