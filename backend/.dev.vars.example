@@ -1,0 +1,6 @@
+# Local development secrets for `wrangler dev` (auto-loaded, never committed).
+# Copy to `.dev.vars` and fill in real values. This file stays a template.
+APP_CLIENT_KEY=your-client-key-here
+GEMINI_API_KEY=your-gemini-api-key
+DEEPSEEK_API_KEY=your-deepseek-api-key
+GITHUB_TOKEN=your-github-token

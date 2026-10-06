@@ -1,0 +1,22 @@
+# Example Cloudflare Workers configuration for the InvoiceExtract proxy.
+# Copy to `wrangler.toml` and NEVER put real secrets in it — production
+# credentials are set with `wrangler secret put <NAME>`, local ones live in
+# `.dev.vars` (see `.dev.vars.example`). Both are git-ignored.
+#
+#   wrangler secret put APP_CLIENT_KEY
+#   wrangler secret put GEMINI_API_KEY
+#   wrangler secret put DEEPSEEK_API_KEY   # optional failover provider
+#   wrangler secret put GITHUB_TOKEN       # optional failover provider
+
+name = "invoice-extract-proxy"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+
+[vars]
+# Shared client credential the app sends as `X-App-Client-Key`.
+# Placeholder only — the real value is a secret (see above).
+APP_CLIENT_KEY = "your-client-key-here"
+# Provider keys below are OPTIONAL in this file: prefer secrets/.dev.vars.
+# GEMINI_API_KEY = "your-gemini-api-key"
+# DEEPSEEK_API_KEY = "your-deepseek-api-key"
+# GITHUB_TOKEN = "your-github-token"

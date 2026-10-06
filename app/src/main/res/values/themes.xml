@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Material 3 baseline reference. The live color scheme is provided by
+         Compose (see ui/theme/Theme.kt); this theme only sets up the window
+         background and disables the default action bar before the first frame. -->
+    <style name="Theme.InvoiceExtract" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- Phase 18 — the starting window. Theme.SplashScreen is the platform contract
+         that Android 12+ reads to draw the system splash; on older APIs the library
+         emulates it from the same attributes. postSplashScreenTheme hands the window
+         back to the real theme once the first frame is ready, so the transparent
+         system bars and edge-to-edge setup of Theme.InvoiceExtract still apply. -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="android:windowBackground">@color/splash_background</item>
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="postSplashScreenTheme">@style/Theme.InvoiceExtract</item>
+    </style>
+</resources>

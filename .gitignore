@@ -1,0 +1,44 @@
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Kotlin
+.kotlin/
+**/.kotlin/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+
+# Local configuration (SDK paths, proxy URLs, client keys — never commit)
+local.properties
+
+# Environment / Secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+!.dev.vars.example
+
+# Backend
+backend/node_modules/
+backend/.wrangler/
+
+# Logs and local run outputs
+*.log
+build_out.txt
+build_err.txt
+domain_test_*.txt
+
+# Android outputs
+*.apk
+*.aab
+
+# Generated installers
+*.msi
+*.exe
+
+# OS files
+.DS_Store
+Thumbs.db

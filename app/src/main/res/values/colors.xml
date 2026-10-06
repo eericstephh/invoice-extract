@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="window_background">#FFF7F9FB</color>
+    <!-- Splash background; matches ic_launcher_background so the launch icon melts
+         into the starting window instead of flashing a different color. -->
+    <color name="splash_background">#FF005F63</color>
+</resources>

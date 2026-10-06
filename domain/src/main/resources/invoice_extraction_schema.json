@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://invoiceextract.app/schema/invoice_extraction_schema.json",
+  "title": "Invoice",
+  "description": "Strict output contract enforced by the LLM system prompt. The model MUST return a single JSON object that validates against this schema. Unknown properties are rejected, so the response contains exactly the fields of the domain model com.invoiceextract.domain.model.Invoice.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "invoiceNumber",
+    "date",
+    "sellerName",
+    "sellerTaxId",
+    "buyerName",
+    "buyerTaxId",
+    "items",
+    "subtotal",
+    "totalTax",
+    "totalDiscount",
+    "grandTotal",
+    "currency",
+    "rawOcrText"
+  ],
+  "properties": {
+    "invoiceNumber": {
+      "type": ["string", "null"],
+      "description": "Official invoice number exactly as printed, e.g. \"10234567890\". null only when genuinely absent from the document.",
+      "examples": ["10234567890", "۱۲۳۴۵۶۷۸۹۰"]
+    },
+    "date": {
+      "type": ["string", "null"],
+      "description": "Date exactly as printed, expected to be a Persian/Solar (Jalali) date. Leading zeros are optional, so both \"1403/05/20\" and \"1403/5/20\" are accepted.",
+      "pattern": "^\\d{4}/\\d{1,2}/\\d{1,2}$",
+      "examples": ["1403/05/20"]
+    },
+    "sellerName": {
+      "type": ["string", "null"],
+      "description": "Name of the seller or service provider."
+    },
+    "sellerTaxId": {
+      "type": ["string", "null"],
+      "description": "Iranian tax identification number of the seller, digits only, as printed."
+    },
+    "buyerName": {
+      "type": ["string", "null"],
+      "description": "Name of the buyer or customer."
+    },
+    "buyerTaxId": {
+      "type": ["string", "null"],
+      "description": "Iranian tax identification number of the buyer, digits only, as printed."
+    },
+    "items": {
+      "type": "array",
+      "description": "Line items of the invoice, in document order. May be empty when the source contains no item table.",
+      "items": {
+        "$ref": "#/$defs/invoiceItem"
+      }
+    },
+    "subtotal": {
+      "type": "number",
+      "description": "Sum of line totals before tax and overall invoice discount.",
+      "minimum": 0
+    },
+    "totalTax": {
+      "type": "number",
+      "description": "Total tax (VAT) of the invoice.",
+      "minimum": 0
+    },
+    "totalDiscount": {
+      "type": "number",
+      "description": "Total discount applied at the invoice level.",
+      "minimum": 0
+    },
+    "grandTotal": {
+      "type": "number",
+      "description": "Final amount payable by the buyer.",
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency of every monetary value in the response.",
+      "enum": ["TOMAN", "RIAL", "USD", "EUR", "USDT", "UNKNOWN"]
+    },
+    "rawOcrText": {
+      "type": "string",
+      "description": "The exact OCR text that was given to the model, echoed back verbatim. Required so the extraction stays auditable."
+    },
+    "id": {
+      "type": "string",
+      "description": "System-assigned identifier (UUID). The model MUST NOT invent a value; the application assigns it after parsing.",
+      "readOnly": true
+    },
+    "validationStatus": {
+      "type": "string",
+      "description": "System-assigned validation outcome. The model MUST NOT emit this field; the application computes it with the domain validator.",
+      "enum": ["Valid", "Warning", "Invalid"],
+      "readOnly": true
+    },
+    "createdAtEpochMs": {
+      "type": "integer",
+      "description": "System-assigned creation time in milliseconds since the Unix epoch. The model MUST NOT emit this field.",
+      "minimum": 0,
+      "readOnly": true
+    }
+  },
+  "$defs": {
+    "invoiceItem": {
+      "type": "object",
+      "description": "A single line item, mirroring com.invoiceextract.domain.model.InvoiceItem.",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "quantity",
+        "unitPrice",
+        "totalPrice",
+        "confidence",
+        "isSuspicious"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "System-assigned line identifier (UUID). The model MUST NOT invent a value.",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Description of the good or service.",
+          "minLength": 1
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Number of units. Fractional values such as 1.5 are valid.",
+          "minimum": 0
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "Price of a single unit, before discount and tax.",
+          "minimum": 0
+        },
+        "discount": {
+          "type": "number",
+          "description": "Total discount on this line. Omit when zero; the parser defaults it to 0.0.",
+          "minimum": 0,
+          "default": 0
+        },
+        "tax": {
+          "type": "number",
+          "description": "Total tax on this line. Omit when zero; the parser defaults it to 0.0.",
+          "minimum": 0,
+          "default": 0
+        },
+        "totalPrice": {
+          "type": "number",
+          "description": "Final line price: quantity * unitPrice - discount + tax.",
+          "minimum": 0
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Self-reported certainty for this line, in the inclusive range 0.0 to 1.0.",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "isSuspicious": {
+          "type": "boolean",
+          "description": "true when the line warrants human review (low confidence, arithmetic mismatch, …).",
+          "default": false
+        }
+      }
+    }
+  }
+}

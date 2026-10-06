@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">استخراج فاکتور</string>
+
+    <!-- Home -->
+    <string name="home_title">استخراج فاکتور</string>
+    <string name="home_scan_ready_title">آماده اسکن</string>
+    <string name="home_scan_ready_subtitle">دوربین را روی فاکتور نگه دارید</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">خانه</string>
+    <string name="nav_review">بازبینی</string>
+    <string name="nav_history">تاریخچه</string>
+
+    <!-- File import -->
+    <string name="action_pick_image">انتخاب تصویر فاکتور</string>
+    <string name="action_pick_pdf">انتخاب فایل PDF</string>
+    <string name="action_change_or_remove">تغییر / حذف</string>
+    <string name="action_proceed">پردازش و استخراج</string>
+    <string name="action_batch_processing">پردازش دسته‌ای چند فاکتور</string>
+    <string name="action_batch_processing_hint">استخراج نوبتی و خروجی تجمیعی</string>
+    <string name="file_kind_pdf">PDF</string>
+    <string name="file_kind_image">تصویر</string>
+    <string name="file_size_label">حجم: %1$s</string>
+
+    <!-- File import errors -->
+    <string name="error_unsupported_format">فرمت فایل پشتیبانی نمی‌شود. فقط JPG، PNG یا PDF باشد.</string>
+    <string name="error_file_too_large">حجم فایل بیشتر از ۱۵ مگابایت است.</string>
+    <string name="error_empty_selection">فایلی انتخاب نشد یا قابل خواندن نیست.</string>
+    <string name="error_copy_failed">خطا هنگام کپی فایل. دوباره تلاش کنید.</string>
+    <string name="error_metadata_failed">خطا هنگام خواندن اطلاعات فایل.</string>
+
+    <!-- Quota -->
+    <string name="error_quota_exceeded">سهمیه رایگان امروز شما به پایان رسیده است. فردا مجدداً شارژ می‌شود.</string>
+
+    <!-- Invoice processing -->
+    <string name="status_preparing_image">در حال آماده‌سازی و بهینه‌سازی فایل...</string>
+    <string name="status_running_ocr">در حال خواندن متن فاکتور با OCR...</string>
+    <string name="status_parsing_structure">در حال ساختاربندی و استخراج اقلام...</string>
+    <string name="error_preparing_failed">خطا هنگام آماده‌سازی فایل. دوباره تلاش کنید.</string>
+    <string name="error_ocr_failed">خطا هنگام خواندن متن فاکتور. دوباره تلاش کنید.</string>
+    <string name="error_parsing_failed">خطا هنگام استخراج ساختار فاکتور. دوباره تلاش کنید.</string>
+
+    <!-- Extraction result -->
+    <string name="extraction_success_title">فاکتور با موفقیت استخراج شد</string>
+    <string name="label_invoice_number">شماره فاکتور</string>
+    <string name="label_invoice_date">تاریخ</string>
+    <string name="label_seller">فروشنده</string>
+    <string name="label_grand_total">مبلغ نهایی</string>
+    <string name="currency_toman">تومان</string>
+    <string name="action_review_and_validate">بررسی و اعتبارسنجی</string>
+    <string name="action_scan_new">اسکن فاکتور جدید</string>
+
+    <!-- Review -->
+    <string name="review_title">بازبینی و اصلاح فاکتور</string>
+    <string name="review_back">بازگشت</string>
+    <string name="review_banner_valid">اطلاعات فاکتور معتبر است</string>
+    <string name="review_banner_warning">نیازمند توجه</string>
+    <string name="review_banner_invalid">فاکتور نامعتبر است</string>
+    <string name="review_general_section">اطلاعات کلی</string>
+    <string name="review_items_section">اقلام فاکتور</string>
+    <string name="review_totals_section">جمع‌بندی مبالغ</string>
+    <string name="review_label_item_name">نام کالا</string>
+    <string name="review_label_quantity">تعداد</string>
+    <string name="review_label_unit_price">قیمت واحد</string>
+    <string name="review_label_total_price">مبلغ کل</string>
+    <string name="review_label_subtotal">جمع کل</string>
+    <string name="review_label_total_tax">کل مالیات</string>
+    <string name="review_label_total_discount">کل تخفیف</string>
+    <string name="review_suspicious_item">این سطر نیازمند بازبینی است</string>
+    <string name="review_empty_title">فاکتوری برای بازبینی موجود نیست</string>
+    <string name="review_empty_subtitle">ابتدا یک فاکتور اسکن کنید</string>
+    <string name="review_action_save">ذخیره فاکتور</string>
+    <string name="review_saved_message">فاکتور آماده ذخیره‌سازی است</string>
+
+    <!-- Profile & account -->
+    <string name="profile_content_description">حساب کاربری</string>
+    <string name="profile_guest_title">کاربر مهمان (حالت آفلاین)</string>
+    <string name="profile_guest_subtitle">برای ذخیره‌سازی ابری و افزایش سهمیه وارد شوید</string>
+    <string name="profile_identifier_label">شماره موبایل یا ایمیل</string>
+    <string name="profile_secret_label">کلمه عبور / کد تایید</string>
+    <string name="profile_sign_in_action">ورود / فعال‌سازی حساب</string>
+    <string name="profile_authenticated_title">کاربر فعال</string>
+    <string name="profile_authenticated_subtitle">حساب متصل</string>
+    <string name="profile_status_active">حساب کاربری فعال (همگام‌سازی شده)</string>
+    <string name="profile_sign_out_action">خروج از حساب کاربری</string>
+    <string name="profile_dismiss_error">بستن پیام خطا</string>
+</resources>

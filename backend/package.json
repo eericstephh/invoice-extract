@@ -1,0 +1,18 @@
+{
+  "name": "invoice-extract-proxy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Secure failover reverse proxy for the InvoiceExtract Android pipeline (Gemini -> Groq).",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241011.0",
+    "typescript": "^5.6.3",
+    "wrangler": "^3.84.0"
+  }
+}
