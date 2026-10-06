@@ -23,7 +23,7 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
 
 ```
  Scan / Photo / PDF
-        │  OCR (Tesseract · PDFBox text layer · ML Kit on Android)
+        │  OCR (Tesseract · PDFBox text layer)
         ▼
  Local AI structuring (Ollama · qwen2.5:3b — on your machine)
         │  ↳ Cloud failover (Gemini → DeepSeek → GitHub Models) only if local is down
@@ -37,10 +37,9 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
 - Drag-and-drop single files and batch folders; scanner hot-folder auto-watch with write-stability guard.
 - Digital-PDF text fast path plus image OCR; Persian text normalization (Arabic/Persian digit and Yeh/Kaf unification, zero-width cleanup).
 - Duplicate detection (exact number + amount/date fingerprint).
-
 ### OCR
+
 - Desktop: Tesseract (`fas.traineddata`, auto-fetched once) + PDFBox text layer.
-- Android: ML Kit on-device Latin recognition (note: ML Kit ships no Persian recognizer — see [Known Limitations](#known-limitations)).
 
 ### AI Extraction
 - Local-first via Ollama (`qwen2.5:3b`, auto-provisioned on Windows: installer → service → model pull, all in-app).
@@ -73,33 +72,32 @@ A typical run looks like this: drop a scan onto the window → the OCR layer rea
 
 - The desktop app is **offline-first**: extraction runs against the Ollama daemon on your own machine; invoices persist as local JSON under `%APPDATA%/InvoiceExtract`.
 - In local mode, document content is **never sent to any cloud** — this follows from the architecture: the pipeline calls `localhost` (Ollama) and the cloud proxy is only invoked on the explicit failover path when local is unavailable.
-- No account, no telemetry, no tracking in the client. The Android cloud path sends OCR text to the proxy, which forwards it to the AI provider — that path inherently shares document text with the provider.
+- No account, no telemetry, no tracking in the client. On the explicit cloud-failover path, OCR text is forwarded to the AI provider — that path inherently shares document text with the provider.
 - End users need **no API key**: cloud failover authenticates worker-to-provider with server-side secrets. Operators deploying their own worker need provider keys (see [Configuration](#configuration)).
 
 ## Architecture
 
 ```
-                    InvoiceExtract
-                          │
-          ┌───────────────┴───────────────┐
-          │                               │
-       Desktop (JVM)                  Android app
-     Compose Multiplatform        Jetpack Compose
-          │                               │
-          └───────────────┬───────────────┘
-                          ▼
+              InvoiceExtract Desktop — Windows 10/11 64-bit
+              (Compose Multiplatform / JVM)
+                              │
+                              ▼
                    :domain (pure Kotlin)
               models · validation · contracts
-                          │
-          ┌───────────────┼───────────────┐
-          ↓               ↓               ↓
-   Data layer      Presentation      Cloud proxy
+                              │
+              ┌───────────────┼───────────────┐
+              ↓               ↓               ↓
+       Data layer      Presentation      Cloud proxy
  OCR · AI · stores ViewModel · UI   (Cloudflare Worker)
    │   (Ollama /        │           Failover chain:
    │    local AI)       │           Gemini → DeepSeek
    │                    │               → GitHub Models
    └─ File-backed JSON stores ──────────
 ```
+
+> **Scope note:** the repository also contains an `:app` Android module, but it
+> is an experimental/future target — **the current public product is
+> InvoiceExtract Desktop for Windows 10/11 64-bit only**.
 
 Details: [docs/architecture.md](docs/architecture.md).
 
@@ -109,7 +107,7 @@ Details: [docs/architecture.md](docs/architecture.md).
 - **JDK 17** to build (Gradle 8.10.2 does not run on newer JVMs; the toolchain auto-provisions where possible).
 - Gradle Wrapper (no manual install): `./gradlew.bat`.
 - For local AI: Ollama is auto-provisioned by the app on first run (several GB download for the daemon + `qwen2.5:3b`).
-- For Android builds: Android SDK + `local.properties` (see [Configuration](#configuration)); for the worker: Node 18+ and Wrangler.
+- Contributors only: Android SDK + `local.properties` (see [Configuration](#configuration)) for the experimental Android module; Node 18+ and Wrangler for the worker.
 
 ## Installation
 
@@ -127,7 +125,7 @@ No secrets are needed to build or run. All credentials stay out of source:
 
 | File | Purpose | Committed? |
 |---|---|---|
-| `local.properties` | Android SDK path + dev proxy URL/client key (`INVOICE_*`) | **Never** (git-ignored) |
+| `local.properties` | Android SDK path (contributor Android builds only) + dev proxy URL/client key (`INVOICE_*`) | **Never** (git-ignored) |
 | `backend/.dev.vars` | Local worker secrets (copy from `.dev.vars.example`) | **Never** (git-ignored) |
 | Cloudflare Secrets | Production worker credentials (`wrangler secret put <NAME>`) | N/A (server-side) |
 
@@ -164,7 +162,7 @@ See [docs/roadmap.md](docs/roadmap.md) — completed vs. planned, extracted from
 ## Known Limitations
 
 - No UI screenshots are bundled yet (only the app icon); store/Play listings will need them.
-- ML Kit has no Persian recognizer — Persian OCR on Android falls back to other engines.
+- ML Kit has no Persian recognizer (relevant only to the experimental Android module — desktop uses Tesseract).
 - macOS/Linux installers are unconfigured and untested.
 - The shared Jalali converter in the exporters uses a simplified month table shared bit-for-bit across sheets (consistent everywhere, not almanac-grade for Shahrivar+ edge cases).
 - App version is `0.1.0`; no signed release or update channel exists yet.

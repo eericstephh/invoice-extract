@@ -24,6 +24,7 @@
 - `:app` test coverage beyond the normalizer suite.
 - Signed releases + update channel (currently debug-signed local builds only).
 - Persian OCR recognizer option on Android (ML Kit has none; desktop uses Tesseract).
+  Android itself remains an experimental, unreleased target.
 
 ## Future
 

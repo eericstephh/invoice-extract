@@ -34,5 +34,5 @@ First public-tree snapshot of the working product:
 - Archive, backup/restore, hot-folder watcher, batch processing.
 - Client statements, petty-cash settlements, product-code mappings.
 - SpreadsheetML/CSV ledgers, Sepidar/Holoo sheets, formal A4 print.
-- Android companion app (Room, DataStore, ML Kit Latin OCR).
+- Android companion app (Room, DataStore, ML Kit Latin OCR) — in-tree experimental module, not released.
 - 350 hermetic JVM tests, zero-warning policy.

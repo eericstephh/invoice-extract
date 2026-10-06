@@ -9,7 +9,7 @@
 |---|---|---|
 | `:domain` | Pure Kotlin/JVM | `model` (Invoice, InvoiceItem, CurrencyType, PaymentStatus), `validation` (InvoiceValidator, national-ID checksums), `extractor` interfaces, `repository` contracts, `export` (CSV emitter). Zero Android/desktop dependencies. |
 | `:desktop` | Compose Multiplatform (JVM) | The desktop app: OCR, AI, stores, use-cases, ViewModel, full UI. Depends on `:domain`. |
-| `:app` | Android (AGP 8.7.2) | The Android app: Jetpack Compose UI, Room persistence, ML Kit OCR, DataStore session. Depends on `:domain`. |
+| `:app` | Android (AGP 8.7.2), experimental | In-tree future target sharing `:domain`: Jetpack Compose UI, Room persistence, ML Kit OCR, DataStore session. **Not part of the current public release**, which is the Windows desktop app only. |
 | `backend/` | TypeScript + Wrangler | `invoice-extract-proxy`: Cloudflare Worker failover reverse proxy (Gemini → DeepSeek → GitHub Models). Not part of the Gradle build. |
 
 ## Desktop layering (`com.invoiceextract.desktop`)
@@ -66,12 +66,15 @@ Key contracts:
 6. **Use**: statements, settlements, reconciliation, analytics, and a dozen
    export formats read the same archive.
 
-## Android app (`com.invoiceextract.app`)
+## Android module (`com.invoiceextract.app`) — experimental
 
-Mirrors the domain contracts with platform pieces: Room database, DataStore
-session, ML Kit Latin OCR, WorkManager-style batching, depth-gated navigation.
-Cloud extraction goes through the worker proxy with the `X-App-Client-Key`
-header (BuildConfig-injected from `local.properties`, never committed).
+> Not part of the current public release (InvoiceExtract Desktop for Windows).
+> Documented here because it exists in the tree, not because it is supported.
+
+An in-progress future target sharing the `:domain` contracts, with platform
+pieces (Room database, DataStore session, ML Kit Latin OCR). Cloud extraction
+goes through the worker proxy with the `X-App-Client-Key` header
+(BuildConfig-injected from `local.properties`, never committed).
 
 ## Backend worker (`backend/src/index.ts`)
 

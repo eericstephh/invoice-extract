@@ -47,6 +47,6 @@ This repository must never contain credentials:
 
 - Client Release builds are debug-signed local artifacts; production uploads
   require a proper upload key (see `app/build.gradle.kts`).
-- The Android cloud path sends OCR text to the AI provider by design; the
-  desktop local path never leaves the machine. Threat reports should state
+- The desktop cloud-failover path sends OCR text to the AI provider by design;
+  the desktop local path never leaves the machine. Threat reports should state
   which path they concern.

@@ -12,7 +12,7 @@
    ```
    or pass `-Dorg.gradle.java.home=<jdk17>` on every invocation.
 2. No Gradle install needed — use the wrapper: `.\gradlew.bat`.
-3. Android builds additionally need the SDK: create `local.properties`
+3. Android work (experimental module only) additionally needs the SDK: create `local.properties`
    (git-ignored, never commit) with:
    ```properties
    sdk.dir=C\:\\Users\\you\\AppData\\Local\\Android\\Sdk
@@ -34,7 +34,8 @@
 - New code ships with tests; CI expectation is zero failures and zero
   Kotlin warnings (`^w: ` clean).
 - The `:app` module holds a small JVM suite (`PersianTextNormalizerTest`);
-  it needs the Android SDK present.
+  it needs the Android SDK present and covers the experimental Android
+  module only.
 
 ## Building
 
